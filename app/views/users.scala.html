@@ -1,0 +1,41 @@
+@(users: List[User], user: Option[User]=None)
+
+@import helper._
+
+@main("Todo list")(user) {
+
+  <h1>Users</h1>
+
+  <ul class="demo-list-item mdl-list">
+    @users.map { u =>
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+          @u.name
+        </span>
+        <a href="@routes.Application.setCookie(u.name)" class="mdl-list__item-secondary-action">
+          <i class="material-icons">person</i>
+        </a>
+      }
+  </ul>
+
+  <br />
+
+  <em>Select a user to log in as that user.</em>
+
+
+  <!-- <h2>Add user</h2>
+
+  <form action="@routes.Application.maybeNewUser" method="POST">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" name='label'>
+      <label class="mdl-textfield__label" for="label">Name of user...</label>
+    </div>
+
+    <button type="submit" value="Create" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored" id="add-button">
+      <i class="material-icons">add</i>
+    </button>
+
+  </form> -->
+
+
+}

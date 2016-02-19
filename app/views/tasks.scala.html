@@ -1,24 +1,37 @@
-@(tasks: List[Task], taskForm: Form[String], list_id: Long)
+@(tasks: List[Task], list_id: Long, user: Option[User]=None)
 
 @import helper._
 
-@main("Todo list") {
+@main("Todo list")(user) {
 
-    <h1>@tasks.size tasks(s)</h1>
+    <h1>Todo List: <a href="@routes.Application.todos">@list_id</a></h1>
 
-    <ul>
-        @tasks.map { task =>
-            <li>
-                @task.label
-                @form(routes.Application.deleteTask(task.id, list_id)) {
-                    <input type="submit" value="Delete">
-                }
+    <ul class="demo-list-item mdl-list">
+      @tasks.map { t =>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <a href="@routes.Application.tasks(t.id)">@t.label</a>
+          </span>
+          <a class="mdl-list__item-secondary-action delete-button" href="@routes.Application.deleteTask(t.id, list_id)">
+            <i class="material-icons">delete</i>
+          </a>
         }
     </ul>
 
-    <h2>Add a new task</h2>
-    @form(routes.Application.newTask(list_id)) {
-        @inputText(taskForm("label"))
-        <input type="submit" value="Create">
-    }
+    <h4 style="text-align:right">@tasks.size task(s)</h4>
+
+    <hr></hr>
+
+    <form action="@routes.Application.newTask(list_id)" method="POST">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" name='label'>
+        <label class="mdl-textfield__label" for="label">I need to do this...</label>
+      </div>
+
+      <button type="submit" value="Create" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored" id="add-button">
+        <i class="material-icons">add</i>
+      </button>
+
+    </form>
+
 }

@@ -22,13 +22,14 @@ object Application extends Controller {
     Redirect(routes.Application.todos)
   }
 
-  def tasks(list_id: Long) = Action {
-    Ok(views.html.tasks(Task.all(list_id), taskForm, list_id))
+  def tasks(list_id: Long) = Action { implicit request =>
+    val user = User(request.cookies.get("user").map(_.value).getOrElse("andy"))
+    Ok(views.html.tasks(Task.all(list_id), list_id, Some(user)))
   }
 
   def newTask(list_id: Long) = Action { implicit request =>
     taskForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.tasks(Task.all(list_id), errors, list_id)),
+      errors => BadRequest(views.html.tasks(Task.all(list_id), list_id)),
       label => {
         Task.create(label, list_id)
         Redirect(routes.Application.tasks(list_id))
@@ -41,13 +42,14 @@ object Application extends Controller {
     Redirect(routes.Application.tasks(list_id))
   }
 
-  def todos = Action {
-    Ok(views.html.todos(Todo.all(), taskForm))
+  def todos = Action { implicit request =>
+    val user = User(request.cookies.get("user").map(_.value).getOrElse("andy"))
+    Ok(views.html.todos(Todo.all(), Some(user)))
   }
 
   def newTodo = Action { implicit request =>
     taskForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.todos(Todo.all(), errors)),
+      errors => BadRequest(views.html.todos(Todo.all())),
       label => {
         Todo.create(label)
         Redirect(routes.Application.todos)
@@ -59,5 +61,26 @@ object Application extends Controller {
     Todo.delete(id)
     Redirect(routes.Application.todos)
   }
+
+  def users = Action { implicit request =>
+    val user = User(request.cookies.get("user").map(_.value).getOrElse("andy"))
+    Ok(views.html.users(User.all(), Some(user)))
+  }
+
+  def maybeNewUser = Action { implicit request =>
+    taskForm.bindFromRequest.fold(
+      errors => BadRequest(views.html.users(User.all())),
+      name => {
+        User.maybeCreate(name)
+        Redirect(routes.Application.todos)
+      }
+    )
+  }
+
+  def setCookie(name: String) = Action { implicit request =>
+    Redirect(routes.Application.todos).withCookies(Cookie("user", name))
+  }
+
+
 
 }

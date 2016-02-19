@@ -1,15 +1,124 @@
-@(title: String)(content: Html)
+@(title: String)(user: Option[User])(content: Html)
 
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
-    </head>
-    <body>
-        @content
-    </body>
+  <head>
+    <title>@title</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+    <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+  </head>
+  <body>
+
+    <div class="mdl-layout mdl-js-layout">
+      <header class="mdl-layout__header mdl-layout__header--scroll">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <a href="/" id="home"><span class="mdl-layout-title">Todo App</span></a>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
+          <!-- Navigation -->
+          <nav class="mdl-navigation">
+            @user.map(_.name).getOrElse("")
+            <a class="mdl-navigation__link" href="@routes.Application.users">
+              <i class="material-icons">person</i>
+            </a>
+          </nav>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Options</span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="">Public lists</a>
+          <a class="mdl-navigation__link" href="">My lists</a>
+        </nav>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <!-- Your content goes here -->
+          <div class="content">
+            @content
+          </div>
+
+        <!-- </div>
+      </main>
+    </div> -->
+
+    <footer class="mdl-mini-footer">
+      <div class="mdl-mini-footer__left-section">
+        <div class="mdl-logo">
+          More Information
+        </div>
+        <ul class="mdl-mini-footer__link-list">
+          <li><a href="#">Help</a></li>
+          <li><a href="#">Privacy and Terms</a></li>
+          <li><a href="#">User Agreement</a></li>
+        </ul>
+      </div>
+      <div class="mdl-mini-footer__right-section">
+        <button class="mdl-mini-footer__social-btn"><i class="material-icons">whatshot</i></button>
+        <button class="mdl-mini-footer__social-btn"><i class="material-icons">school</i></button>
+        <button class="mdl-mini-footer__social-btn"><i class="material-icons">location_city</i></button>
+        <button class="mdl-mini-footer__social-btn"><i class="material-icons">share</i></button>
+      </div>
+    </footer>
+
+  </div>
+</main>
+</div>
+
+
+  </body>
+
+  <!-- <footer class="mdl-mega-footer">
+    <div class="mdl-mega-footer__middle-section">
+
+      <div class="mdl-mega-footer__drop-down-section">
+        <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+        <h1 class="mdl-mega-footer__heading">Features</h1>
+        <ul class="mdl-mega-footer__link-list">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Partners</a></li>
+        </ul>
+      </div>
+
+      <div class="mdl-mega-footer__drop-down-section">
+        <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+        <h1 class="mdl-mega-footer__heading">Details</h1>
+        <ul class="mdl-mega-footer__link-list">
+          <li><a href="#">Specs</a></li>
+          <li><a href="#">Tools</a></li>
+          <li><a href="#">Resources</a></li>
+        </ul>
+      </div>
+
+      <div class="mdl-mega-footer__drop-down-section">
+        <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+        <h1 class="mdl-mega-footer__heading">Technology</h1>
+        <ul class="mdl-mega-footer__link-list">
+          <li><a href="#">Patterns</a></li>
+          <li><a href="#">Usage</a></li>
+          <li><a href="#">Products</a></li>
+        </ul>
+      </div>
+
+      <div class="mdl-mega-footer__drop-down-section">
+        <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+        <h1 class="mdl-mega-footer__heading">FAQ</h1>
+        <ul class="mdl-mega-footer__link-list">
+          <li><a href="#">Questions</a></li>
+          <li><a href="#">Answers</a></li>
+          <li><a href="#">Contact us</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </footer> -->
+
 </html>

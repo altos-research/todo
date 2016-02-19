@@ -1,24 +1,40 @@
-@(todos: List[Todo], todoForm: Form[String])
+@(todos: List[Todo], user: Option[User]=None)
 
 @import helper._
 
-@main("Todo lists") {
+@main("Todo lists")(user) {
 
-    <h1>@todos.size todo(s)</h1>
+    <h1>All todo lists</h1>
 
-    <ul>
-        @todos.map { t =>
-            <li>
-                @t.label
-                @form(routes.Application.deleteTodo(t.id)) {
-                    <input type="submit" value="Delete">
-                }
+    <ul class="demo-list-item mdl-list">
+      @todos.map { t =>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <a href="@routes.Application.tasks(t.id)">@t.label</a>
+          </span>
+          <a class="mdl-list__item-secondary-action delete-button" href="@routes.Application.deleteTodo(t.id)">
+            <i class="material-icons">delete</i>
+          </a>
+          <!-- @form(routes.Application.deleteTodo(t.id)) {
+              <input type="submit" value="Delete">
+          } -->
         }
     </ul>
 
-    <h2>Add a new todo</h2>
-    @form(routes.Application.newTodo) {
-        @inputText(todoForm("label"))
-        <input type="submit" value="Create">
-    }
+    <h4 style="text-align:right">@todos.size todo(s)</h4>
+
+    <hr></hr>
+
+    <form action="@routes.Application.newTodo" method="POST">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" name='label'>
+        <label class="mdl-textfield__label" for="label">Name your todo list...</label>
+      </div>
+
+      <button type="submit" value="Create" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored" id="add-button">
+        <i class="material-icons">add</i>
+      </button>
+
+    </form>
+
 }

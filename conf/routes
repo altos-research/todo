@@ -4,15 +4,18 @@
 
 # Home page
 GET     /                           controllers.Application.todos
+GET     /users                      controllers.Application.users
+POST    /users                      controllers.Application.maybeNewUser
+GET     /login/:name                controllers.Application.setCookie(name: String)
 
 # Todos
-POST    /                           controllers.Application.newTodo
-DELETE  /:id                        controllers.Application.deleteTodo(id: Long)
+POST    /new                        controllers.Application.newTodo
+GET     /:id/delete                 controllers.Application.deleteTodo(id: Long)
 
 # Tasks
 GET     /:list_id                   controllers.Application.tasks(list_id: Long)
-POST    /:list_id                   controllers.Application.newTask(list_id: Long)
-DELETE  /:list_id/:id               controllers.Application.deleteTask(id: Long, list_id: Long)
+POST    /:list_id/new               controllers.Application.newTask(list_id: Long)
+GET     /:list_id/:id/delete        controllers.Application.deleteTask(id: Long, list_id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
