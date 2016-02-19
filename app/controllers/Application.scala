@@ -12,33 +12,52 @@ import play.api.data.Forms._
 import models._
 
 object Application extends Controller {
-  
+
   // Form helper with validation to require non-empty field
   val taskForm = Form(
     "label" -> nonEmptyText
   )
 
   def index = Action {
-    Redirect(routes.Application.tasks)
+    Redirect(routes.Application.todos)
   }
-  
+
   def tasks = Action {
-    Ok(views.html.index(Task.all(), taskForm))
+    Ok(views.html.tasks(Task.all(), taskForm))
   }
-  
+
   def newTask = Action { implicit request =>
     taskForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.index(Task.all(), errors)),
+      errors => BadRequest(views.html.tasks(Task.all(), errors)),
       label => {
         Task.create(label)
         Redirect(routes.Application.tasks)
       }
     )
   }
-  
+
   def deleteTask(id: Long) = Action { implicit request =>
     Task.delete(id)
     Redirect(routes.Application.tasks)
   }
-  
+
+  def todos = Action {
+    Ok(views.html.todos(Todo.all(), taskForm))
+  }
+
+  def newTodo = Action { implicit request =>
+    taskForm.bindFromRequest.fold(
+      errors => BadRequest(views.html.todos(Todo.all(), errors)),
+      label => {
+        Todo.create(label)
+        Redirect(routes.Application.todos)
+      }
+    )
+  }
+
+  def deleteTodo(id: Long) = Action { implicit request =>
+    Todo.delete(id)
+    Redirect(routes.Application.todos)
+  }
+
 }
