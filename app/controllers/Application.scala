@@ -22,23 +22,23 @@ object Application extends Controller {
     Redirect(routes.Application.todos)
   }
 
-  def tasks = Action {
-    Ok(views.html.tasks(Task.all(), taskForm))
+  def tasks(list_id: Long) = Action {
+    Ok(views.html.tasks(Task.all(list_id), taskForm, list_id))
   }
 
-  def newTask = Action { implicit request =>
+  def newTask(list_id: Long) = Action { implicit request =>
     taskForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.tasks(Task.all(), errors)),
+      errors => BadRequest(views.html.tasks(Task.all(list_id), errors, list_id)),
       label => {
-        Task.create(label)
-        Redirect(routes.Application.tasks)
+        Task.create(label, list_id)
+        Redirect(routes.Application.tasks(list_id))
       }
     )
   }
 
-  def deleteTask(id: Long) = Action { implicit request =>
-    Task.delete(id)
-    Redirect(routes.Application.tasks)
+  def deleteTask(id: Long, list_id: Long) = Action { implicit request =>
+    Task.delete(id, list_id)
+    Redirect(routes.Application.tasks(list_id))
   }
 
   def todos = Action {

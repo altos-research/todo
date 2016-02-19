@@ -3,17 +3,16 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           controllers.Application.todos
 
 # Todos
-GET			/todos											controllers.Application.todos
-POST		/todos											controllers.Application.newTodo
-POST		/todos/:id/delete						controllers.Application.deleteTodo(id: Long)
+POST    /                           controllers.Application.newTodo
+DELETE  /:id                        controllers.Application.deleteTodo(id: Long)
 
 # Tasks
-GET			/tasks											controllers.Application.tasks
-POST		/tasks											controllers.Application.newTask
-POST		/tasks/:id/delete						controllers.Application.deleteTask(id: Long)
+GET     /:list_id                   controllers.Application.tasks(list_id: Long)
+POST    /:list_id                   controllers.Application.newTask(list_id: Long)
+DELETE  /:list_id/:id               controllers.Application.deleteTask(id: Long, list_id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

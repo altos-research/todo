@@ -10,7 +10,7 @@
         @todos.map { t =>
             <li>
                 @t.label
-                @form(routes.Application.deleteTask(t.id)) {
+                @form(routes.Application.deleteTodo(t.id)) {
                     <input type="submit" value="Delete">
                 }
         }

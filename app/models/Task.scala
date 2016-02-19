@@ -19,23 +19,30 @@ object Task {
 		}
 	}
 
-	def all(): List[Task] = DB.withConnection { implicit c =>
-		SQL("select * from task").as(task *)
+	def all(list_id: Long): List[Task] = DB.withConnection { implicit c =>
+		SQL("select * from task WHERE list_id = {list_id}")
+      .on('list_id -> list_id)
+      .as(task *)
 	}
-	
-	def create(label: String) {
+
+	def create(label: String, list_id: Long) {
 		DB.withConnection { implicit c =>
-			SQL("insert into task (label) values ({label})").on(
-				'label -> label
-			).executeUpdate()
+			SQL("""insert into task (label, list_id)
+             values ({label}, {list_id})""")
+        .on('label -> label,
+            'list_id -> list_id)
+        .executeUpdate()
 		}
 	}
-	
-	def delete(id: Long) {
+
+	def delete(id: Long, list_id: Long) {
 		DB.withConnection { implicit c =>
-			SQL("delete from task where id = {id}").on(
-				'id -> id
-			).executeUpdate()
+			SQL("""delete from task
+             where id = {id}
+             and list_id = {list_id}""")
+        .on('id -> id,
+            'list_id -> list_id)
+        .executeUpdate()
 		}
-	}	
+	}
 }
