@@ -1,10 +1,16 @@
-@(tasks: List[Task], list_id: Long, user: Option[User]=None)
+@(tasks: List[Task], todo: Todo, user: Option[User]=None)
 
 @import helper._
 
 @main("Todo list")(user) {
 
-    <h1>Todo List: <a href="@routes.Application.todos">@list_id</a></h1>
+    <a href="@routes.Application.todos">
+      <button class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">arrow_back</i>
+      </button>
+    </a>
+
+    <h1>Todo List: @todo.label</h1>
 
     <ul class="demo-list-item mdl-list">
       @tasks.map { t =>
@@ -12,7 +18,7 @@
           <span class="mdl-list__item-primary-content">
             <a href="@routes.Application.tasks(t.id)">@t.label</a>
           </span>
-          <a class="mdl-list__item-secondary-action delete-button" href="@routes.Application.deleteTask(t.id, list_id)">
+          <a class="mdl-list__item-secondary-action delete-button" href="@routes.Application.deleteTask(t.id, todo.id)">
             <i class="material-icons">delete</i>
           </a>
         }
@@ -22,7 +28,7 @@
 
     <hr></hr>
 
-    <form action="@routes.Application.newTask(list_id)" method="POST">
+    <form action="@routes.Application.newTask(todo.id)" method="POST">
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input class="mdl-textfield__input" type="text" name='label'>
         <label class="mdl-textfield__label" for="label">I need to do this...</label>

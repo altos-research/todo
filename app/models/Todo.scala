@@ -24,7 +24,6 @@ object Todo {
       .as(Todo.parser.*)
   }
 
-
   def create(label: String, user: User) = DB.withConnection { implicit c =>
     SQL("""insert into todo_list (label, user_id)
            values ({label}, {userId})""")
@@ -38,9 +37,18 @@ object Todo {
       .executeUpdate()
   }
 
+  // TODO if used this should really be moved to the case class.
   def owner(list_id: Long): User = DB.withConnection { implicit c =>
     SQL("select u.* from todo_list t inner join users u ON u.id = t.user_id where t.id = {listId}")
       .on('listId -> list_id)
       .as(User.parser.single)
+  }
+
+  // This method is used to check whether the user should have access to the list
+  // currently it just checks if they are the owner...
+  def byId(list_id: Long, user: User): Option[Todo] = DB.withConnection { implicit c =>
+    SQL("select * from todo_list where id = {listId} and user_id = {userId}")
+      .on('listId -> list_id, 'userId -> user.id)
+      .as(Todo.parser.singleOpt)
   }
 }
