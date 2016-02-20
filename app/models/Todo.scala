@@ -44,11 +44,11 @@ object Todo {
       .as(User.parser.single)
   }
 
-  // This method is used to check whether the user should have access to the list
-  // currently it just checks if they are the owner...
+  // This method is used to check whether the user should have access to the list.
+  // Currently it checks nothing: YOLO.
   def byId(list_id: Long, user: User): Option[Todo] = DB.withConnection { implicit c =>
-    SQL("select * from todo_list where id = {listId} and user_id = {userId}")
-      .on('listId -> list_id, 'userId -> user.id)
+    SQL("select * from todo_list where id = {listId}")
+      .on('listId -> list_id)
       .as(Todo.parser.singleOpt)
   }
 }
