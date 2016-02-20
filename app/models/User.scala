@@ -9,8 +9,7 @@ object User {
   import anorm._
   import anorm.SqlParser._
   val parser: RowParser[User] ={
-    long("id") ~
-    str("name") map {
+    long("id") ~ str("name") map {
       case id ~ name => User(id, name)
     }
   }
@@ -24,12 +23,10 @@ object User {
     byName(name).getOrElse(create(name))
   }
 
-  private def create(name: String): User ={
-    DB.withConnection { implicit c =>
-      SQL("insert into users (name) values ({name})")
-        .on('name -> name)
-        .executeInsert(User.parser.single)
-    }
+  private def create(name: String): User = DB.withConnection { implicit c =>
+    SQL("insert into users (name) values ({name})")
+      .on('name -> name)
+      .executeInsert(User.parser.single)
   }
 
   def byName(name: String): Option[User] = DB.withConnection { implicit c =>
@@ -37,5 +34,4 @@ object User {
       .on('name -> name)
       .as(User.parser.singleOpt)
   }
-
 }

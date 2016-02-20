@@ -10,8 +10,7 @@ object Task {
   import anorm._
   import anorm.SqlParser._
   val parser: RowParser[Task] ={
-    long("id") ~
-    str("label") map {
+    long("id") ~ str("label") map {
       case id ~ label => Task(id, label)
     }
   }
@@ -22,20 +21,16 @@ object Task {
       .as(Task.parser.*)
   }
 
-  def create(label: String, list_id: Long) {
-    DB.withConnection { implicit c =>
-      SQL("""insert into task (label, list_id)
-             values ({label}, {list_id})""")
-        .on('label -> label, 'list_id -> list_id)
-        .executeUpdate()
-    }
+  def create(label: String, list_id: Long) = DB.withConnection { implicit c =>
+    SQL("""insert into task (label, list_id)
+           values ({label}, {list_id})""")
+      .on('label -> label, 'list_id -> list_id)
+      .executeUpdate()
   }
 
-  def delete(id: Long, list_id: Long) {
-    DB.withConnection { implicit c =>
-      SQL("delete from task where id = {id} and list_id = list_id").on(
-        'id -> id, 'list_id -> list_id
-      ).executeUpdate()
-    }
+  def delete(id: Long, list_id: Long) = DB.withConnection { implicit c =>
+    SQL("delete from task where id = {id} and list_id = list_id")
+      .on('id -> id, 'list_id -> list_id)
+      .executeUpdate()
   }
 }

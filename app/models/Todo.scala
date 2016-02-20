@@ -9,8 +9,7 @@ object Todo {
   import anorm._
   import anorm.SqlParser._
   val parser: RowParser[Todo] ={
-    long("id") ~
-    str("label") map {
+    long("id") ~ str("label") map {
       case id ~ label => Todo(id, label)
     }
   }
@@ -19,25 +18,29 @@ object Todo {
     SQL("select * from todo_list").as(Todo.parser.*)
   }
 
-  def all(username: String): List[Todo] = ???
-
-  def create(label: String, user: User) {
-    DB.withConnection { implicit c =>
-      SQL("insert into todo_list (label) values ({label})").on(
-        'label -> label
-      ).executeUpdate()
-    }
+  def all(user: User): List[Todo] = DB.withConnection { implicit c =>
+    SQL("select * from todo_list where user_id = {userId}")
+      .on('userId -> user.id)
+      .as(Todo.parser.*)
   }
 
-  def delete(id: Long, user: User) {
-    DB.withConnection { implicit c =>
-      SQL("delete from todo_list where id = {id}").on(
-        'id -> id
-      ).executeUpdate()
-    }
+
+  def create(label: String, user: User) = DB.withConnection { implicit c =>
+    SQL("""insert into todo_list (label, user_id)
+           values ({label}, {userId})""")
+      .on('label -> label, 'userId -> user.id)
+      .executeUpdate()
   }
 
-  def owner(list_id: Long): User ={
-    ???
+  def delete(id: Long, user: User) = DB.withConnection { implicit c =>
+    SQL("delete from todo_list where id = {id} and user_id = {userId}")
+      .on('id -> id, 'userId -> user.id)
+      .executeUpdate()
+  }
+
+  def owner(list_id: Long): User = DB.withConnection { implicit c =>
+    SQL("select u.* from todo_list t inner join users u ON u.id = t.user_id where t.id = {listId}")
+      .on('listId -> list_id)
+      .as(User.parser.single)
   }
 }
