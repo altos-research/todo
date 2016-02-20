@@ -1,6 +1,5 @@
 package models
 
-// Required for the Play db functionality
 import play.api.db._
 import play.api.Play.current
 

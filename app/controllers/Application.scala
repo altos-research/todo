@@ -1,14 +1,11 @@
 package controllers
 
-// Required by default
 import play.api._
 import play.api.mvc._
 
-// Required for form helpers
 import play.api.data._
 import play.api.data.Forms._
 
-// Required to be able to import model definitions
 import models._
 
 object Application extends Controller {
