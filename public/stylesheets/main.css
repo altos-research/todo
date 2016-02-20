@@ -10,11 +10,8 @@ a.delete-button {
   float: right;
 }
 
-/*This will look bad on phones!!*/
 .content {
-  width: 40%;
-  margin-left: 30%;
-  height: calc(100vh - 180px);
+  height: calc(100vh - 164px); /*height of header + footer is 164px (on my machine).*/
 }
 
 #home {

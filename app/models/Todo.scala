@@ -1,9 +1,5 @@
 package models
 
-// Required for Anorm mapping capability
-import anorm._
-import anorm.SqlParser._
-
 // Required for the Play db functionality
 import play.api.db._
 import play.api.Play.current
@@ -11,19 +7,22 @@ import play.api.Play.current
 case class Todo(id: Long, label: String)
 
 object Todo {
-  // Parser for mapping JDBC ResultSet to a single entity of Todo model
-  val todo = {
-    get[Long]("id") ~
-    get[String]("label") map {
-      case id~label => Todo(id, label)
+  import anorm._
+  import anorm.SqlParser._
+  val parser: RowParser[Todo] ={
+    long("id") ~
+    str("label") map {
+      case id ~ label => Todo(id, label)
     }
   }
 
   def all(): List[Todo] = DB.withConnection { implicit c =>
-    SQL("select * from todo_list").as(todo *)
+    SQL("select * from todo_list").as(Todo.parser.*)
   }
 
-  def create(label: String) {
+  def all(username: String): List[Todo] = ???
+
+  def create(label: String, user: User) {
     DB.withConnection { implicit c =>
       SQL("insert into todo_list (label) values ({label})").on(
         'label -> label
@@ -31,11 +30,15 @@ object Todo {
     }
   }
 
-  def delete(id: Long) {
+  def delete(id: Long, user: User) {
     DB.withConnection { implicit c =>
       SQL("delete from todo_list where id = {id}").on(
         'id -> id
       ).executeUpdate()
     }
+  }
+
+  def owner(list_id: Long): User ={
+    ???
   }
 }

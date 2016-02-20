@@ -9,17 +9,19 @@ case class Task(id: Long, label: String)
 
 object Task {
 
-  val task = {
-    get[Long]("id") ~
-    get[String]("label") map {
-      case id~label => Task(id, label)
+  import anorm._
+  import anorm.SqlParser._
+  val parser: RowParser[Task] ={
+    long("id") ~
+    str("label") map {
+      case id ~ label => Task(id, label)
     }
   }
 
   def all(list_id: Long): List[Task] = DB.withConnection { implicit c =>
     SQL("select * from task where list_id = {list_id}")
       .on('list_id -> list_id)
-      .as(task *)
+      .as(Task.parser.*)
   }
 
   def create(label: String, list_id: Long) {
@@ -38,5 +40,4 @@ object Task {
       ).executeUpdate()
     }
   }
-
 }
