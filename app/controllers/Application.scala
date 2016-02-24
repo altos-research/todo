@@ -23,10 +23,11 @@ object Application extends Controller {
 
   // TODO the open question here is what is the correct action to take on failure.
   // Note: In AJAX the question is much less important.
-  def withTodo(id: Long)(f: User => Todo => Request[AnyContent] => Result) = withUser { user => implicit request =>
-    Todo.byId(id, user)
-        .fold(Redirect(routes.Application.todos): Result)(f(user)(_)(request))
-  }
+  def withTodo(id: Long)(f: User => Todo => Request[AnyContent] => Result) =
+    withUser { user => request => Todo.byId(id, user)
+                                      .map(f(user)(_)(request))
+                                      .getOrElse(Redirect(routes.Application.todos))
+    }
 
 
 
@@ -95,7 +96,7 @@ object Application extends Controller {
     )
   }
 
-  def setCookie(name: String) = Action { implicit request =>
+  def login(name: String) = Action { implicit request =>
     Redirect(routes.Application.todos).withCookies(Cookie("user", name))
   }
 }

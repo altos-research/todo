@@ -6,7 +6,7 @@
 GET     /                           controllers.Application.todos
 GET     /users                      controllers.Application.users
 POST    /users                      controllers.Application.maybeNewUser
-GET     /login/:name                controllers.Application.setCookie(name: String)
+GET     /login/:name                controllers.Application.login(name: String)
 
 # Todos
 POST    /new                        controllers.Application.newTodo

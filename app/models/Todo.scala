@@ -24,11 +24,11 @@ object Todo {
       .as(Todo.parser.*)
   }
 
-  def create(label: String, user: User) = DB.withConnection { implicit c =>
+  def create(label: String, user: User): Todo = DB.withConnection { implicit c =>
     SQL("""insert into todo_list (label, user_id)
            values ({label}, {userId})""")
       .on('label -> label, 'userId -> user.id)
-      .executeUpdate()
+      .executeInsert(Todo.parser.single)
   }
 
   def delete(id: Long, user: User) = DB.withConnection { implicit c =>
